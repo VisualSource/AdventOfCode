@@ -1,3 +1,5 @@
+advent::solution!(1);
+
 fn parse_input(input: &str, replace: bool) -> u32 {
     input
         .lines()
@@ -27,16 +29,14 @@ fn parse_input(input: &str, replace: bool) -> u32 {
         .sum()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::super::read_input;
-    use super::*;
-    #[test]
-    fn advent_day_1_part2() {
-        let input = read_input("./data/adv1_2.txt");
+#[must_use]
+pub fn part_one() -> Option<usize> {
+    None
+}
 
-        let output = parse_input(input.as_str(), true);
+#[must_use]
+pub fn part_two(input: &str) -> Option<usize> {
+    let output = parse_input(input, true) as usize;
 
-        println!("{output}");
-    }
+    Some(output)
 }

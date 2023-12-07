@@ -1,4 +1,4 @@
-use super::read_input;
+advent::solution!(2);
 
 #[derive(Debug)]
 struct Color {
@@ -81,8 +81,7 @@ impl Game {
     }
 }
 
-fn parse_content(path: &'static str) -> Vec<Game> {
-    let data = read_input(path);
+fn parse_content(data: &'static str) -> Vec<Game> {
     data.lines()
         .map(|line| {
             let game_content = line.split(":").collect::<Vec<&str>>();
@@ -106,7 +105,8 @@ fn parse_content(path: &'static str) -> Vec<Game> {
         .collect::<Vec<Game>>()
 }
 
-fn part1(data_path: &'static str) -> usize {
+#[must_use]
+fn part_one(data_path: &'static str) -> Option<usize> {
     let games = parse_content(data_path);
 
     let value = games
@@ -114,14 +114,17 @@ fn part1(data_path: &'static str) -> usize {
         .filter(|x| x.is_valid(12, 13, 14))
         .fold(0, |acc, x| acc + x.id);
 
-    value
+    Some(value)
 }
 
-fn part2(data_path: &'static str) -> usize {
+#[must_use]
+fn part_two(data_path: &'static str) -> Option<usize> {
     let data = parse_content(data_path);
 
-    data.iter()
-        .fold(0, |acc, e| acc + e.max_values().get_power())
+    Some(
+        data.iter()
+            .fold(0, |acc, e| acc + e.max_values().get_power()),
+    )
 }
 
 #[cfg(test)]
@@ -132,28 +135,5 @@ mod tests {
         let output = Color::from("8 green, 6 blue, 20 red");
 
         println!("{:#?}", output);
-    }
-    #[test]
-    fn test_one() {
-        let value = part1("./data/adv2_1.test.txt");
-        assert_eq!(value, 8);
-    }
-
-    #[test]
-    fn asw_one() {
-        let value = part1("./data/adv2_1.txt");
-        println!("{}", value);
-    }
-
-    #[test]
-    fn test_two() {
-        let value = part2("./data/adv2_1.test.txt");
-        assert_eq!(value, 2286);
-    }
-
-    #[test]
-    fn aws_two() {
-        let value = part2("./data/adv2_2.txt");
-        println!("{}", value);
     }
 }

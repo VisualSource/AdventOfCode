@@ -1,5 +1,6 @@
-use super::read_input;
 use std::{collections::HashSet, usize};
+
+advent::solution!(3);
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct Cord {
@@ -65,8 +66,8 @@ impl Number {
     }
 }
 
-fn part2(path: &'static str) -> usize {
-    let input = read_input(path);
+#[must_use]
+fn part_two(input: &str) -> Option<usize> {
     let mut numbers: Vec<Number> = vec![];
 
     let mut gears: HashSet<Cord> = HashSet::new();
@@ -102,7 +103,7 @@ fn part2(path: &'static str) -> usize {
         }
     }
 
-    gears.iter().fold(0, |acc, gear| {
+    Some(gears.iter().fold(0, |acc, gear| {
         let values = numbers
             .iter()
             .filter(|num| num.in_range(gear))
@@ -112,12 +113,11 @@ fn part2(path: &'static str) -> usize {
         } else {
             acc + values.iter().fold(1, |acc, x| acc * x.value)
         }
-    })
+    }))
 }
 
-fn part1(path: &'static str) -> usize {
-    let input = read_input(path);
-
+#[must_use]
+fn part_one(input: &str) -> Option<usize> {
     let mut cached_symbles: HashSet<Cord> = HashSet::new();
     let mut numbers: Vec<Number> = vec![];
 
@@ -152,39 +152,13 @@ fn part1(path: &'static str) -> usize {
         }
     }
 
-    numbers
-        .iter()
-        .filter(|x| x.ranges(&cached_symbles))
-        .fold(0, |acc, e| acc + e.value)
+    Some(
+        numbers
+            .iter()
+            .filter(|x| x.ranges(&cached_symbles))
+            .fold(0, |acc, e| acc + e.value),
+    )
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_one() {
-        let output = part1("./data/adv3_1.test.txt");
-        assert_eq!(output, 4361)
-    }
-
-    #[test]
-    fn aws_one() {
-        let input = part1("./data/adv3_1.txt");
-
-        println!("{}", input);
-    }
-
-    #[test]
-    fn test_two() {
-        let output = part2("./data/adv3_1.test.txt");
-        assert_eq!(output, 467835)
-    }
-
-    #[test]
-    fn aws_two() {
-        let input = part2("./data/adv3_1.txt");
-
-        println!("{}", input);
-    }
-}
+mod tests {}

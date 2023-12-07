@@ -2,8 +2,16 @@
 name = "advent"
 version = "0.1.0"
 edition = "2021"
-
+authors = ["Collin Blosser <collin_blosser@yahoo.com>"]
+default-run = "advent"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 range-ext = "0.3.0"
+pico-args = "0.5.0"
+itertools = "0.12.0"
+[lib]
+doctest = false
+
+[features]
+test_lib = []

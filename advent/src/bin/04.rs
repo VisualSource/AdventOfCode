@@ -1,6 +1,6 @@
 use std::collections::{HashMap, VecDeque};
 
-use crate::read_input;
+advent::solution!(4);
 
 #[derive(Debug, PartialEq, Eq)]
 struct Card {
@@ -28,8 +28,7 @@ impl Card {
     }
 }
 
-fn parse_input(path: &'static str) -> Vec<Card> {
-    let input = read_input(path);
+fn parse_input(input: &str) -> Vec<Card> {
     let mut cards = vec![];
     for line in input.lines() {
         let data = line.split(":").collect::<Vec<&str>>();
@@ -67,13 +66,15 @@ fn parse_input(path: &'static str) -> Vec<Card> {
     cards
 }
 
-fn part1(path: &'static str) -> usize {
+#[must_use]
+fn part_one(path: &str) -> Option<usize> {
     let input = parse_input(path);
 
-    input.iter().map(|e| e.points()).fold(0, |acc, v| acc + v)
+    Some(input.iter().map(|e| e.points()).fold(0, |acc, v| acc + v))
 }
 
-fn part2(path: &'static str) -> usize {
+#[must_use]
+fn part_two(path: &str) -> Option<usize> {
     let input = parse_input(path);
 
     let mut output = input.len();
@@ -104,7 +105,7 @@ fn part2(path: &'static str) -> usize {
         seen.insert(idx, wins);
     }
 
-    output
+    Some(output)
 }
 
 #[cfg(test)]
@@ -120,32 +121,5 @@ mod tests {
         };
 
         println!("{:#?}", card.winnings());
-    }
-
-    #[test]
-    fn test_one() {
-        let output = part1("./data/adv4_1.test.txt");
-
-        assert_eq!(output, 13);
-    }
-    #[test]
-    fn test_two() {
-        let output = part2("./data/adv4_1.test.txt");
-
-        assert_eq!(output, 30);
-    }
-
-    #[test]
-    fn aws_one() {
-        let output = part1("./data/adv4.txt");
-
-        println!("{}", output);
-    }
-
-    #[test]
-    fn aws_two() {
-        let output = part2("./data/adv4.txt");
-
-        println!("{}", output);
     }
 }

@@ -1,12 +1,6 @@
-use range_ext::intersect::{Intersect, IntersectionExt};
-use std::{
-    collections::{BTreeSet, HashMap, VecDeque},
-    iter::Peekable,
-    slice::Iter,
-    str::Lines,
-};
+use std::{collections::BTreeSet, iter::Peekable, slice::Iter, str::Lines};
 
-use crate::read_input;
+advent::solution!(5);
 
 #[derive(Debug, Default)]
 struct Range {
@@ -114,7 +108,7 @@ fn parse_range(line_iter: &mut Peekable<Lines<'_>>) -> Vec<Range> {
 }
 
 fn parse_input(
-    path: &'static str,
+    input: &str,
 ) -> (
     Vec<usize>,
     Vec<Range>,
@@ -125,8 +119,6 @@ fn parse_input(
     Vec<Range>,
     Vec<Range>,
 ) {
-    let input = read_input(path);
-
     let mut seed_ids: Vec<usize> = vec![];
     let mut seed_to_soil_map = vec![];
     let mut soil_to_fertilizer = vec![];
@@ -193,7 +185,8 @@ fn first_transform(mut iter: Iter<'_, Range>, value: &usize) -> Option<usize> {
     None
 }
 
-fn part1(path: &'static str) -> usize {
+#[must_use]
+fn part_one(path: &str) -> Option<usize> {
     let (
         seeds,
         seeds_to_soil,
@@ -236,11 +229,11 @@ fn part1(path: &'static str) -> usize {
             first_transform(range, &humitdity).unwrap_or(humitdity)
         })
         .min()
-        .unwrap()
 }
 
 // @see https://github.com/andypymont/advent2023-rust/blob/main/src/bin/05.rs
-fn part2(path: &'static str) -> usize {
+#[must_use]
+fn part_two(path: &str) -> Option<usize> {
     let (
         seeds,
         seeds_to_soil,
@@ -275,11 +268,7 @@ fn part2(path: &'static str) -> usize {
         future = Vec::new();
     }
 
-    current
-        .iter()
-        .map(|range| range.0)
-        .min()
-        .expect("Failed to get min")
+    current.iter().map(|range| range.0).min()
 }
 
 #[cfg(test)]
@@ -302,32 +291,5 @@ mod tests {
         let data = parse_input("./data/adv5_test.txt");
 
         println!("{:#?}", data);
-    }
-
-    #[test]
-    fn test_one() {
-        let output = part1("./data/adv5_test.txt");
-        println!("{}", output);
-        assert_eq!(output, 35);
-    }
-    #[test]
-    fn test_two() {
-        let output = part2("./data/adv5_test.txt");
-
-        assert_eq!(output, 46);
-    }
-
-    #[test]
-    fn aws_one() {
-        let output = part1("./data/adv5.txt");
-
-        println!("{}", output);
-    }
-
-    #[test]
-    fn aws_two() {
-        let output = part2("./data/adv5.txt");
-
-        println!("{}", output);
     }
 }
