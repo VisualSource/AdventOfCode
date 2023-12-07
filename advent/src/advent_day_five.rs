@@ -1,15 +1,29 @@
-use std::{collections::HashMap, iter::Peekable, slice::Iter, str::Lines};
+use range_ext::intersect::{Intersect, IntersectionExt};
+use std::{
+    collections::{BTreeSet, HashMap, VecDeque},
+    iter::Peekable,
+    slice::Iter,
+    str::Lines,
+};
 
 use crate::read_input;
 
 #[derive(Debug, Default)]
 struct Range {
-    destination_range_start: usize,
-    source_range_start: usize,
-    range_length: usize,
+    pub destination_range_start: usize,
+    pub source_range_start: usize,
+    pub range_length: usize,
 }
 
 impl Range {
+    pub fn new(d: usize, s: usize, l: usize) -> Self {
+        Self {
+            destination_range_start: d,
+            source_range_start: s,
+            range_length: l,
+        }
+    }
+
     pub fn in_range(&self, value: &usize) -> bool {
         value >= &self.source_range_start && value <= &(self.source_range_start + self.range_length)
     }
@@ -27,6 +41,48 @@ impl Range {
 
         Some(new_value)
     }
+}
+
+fn convert_range(source: &Vec<Range>, start: usize, len: usize) -> Vec<(usize, usize)> {
+    let mut slices = BTreeSet::new();
+
+    let range_max = start + len;
+
+    for entry in source {
+        let source_max = entry.source_range_start + entry.range_length;
+
+        if range_max < entry.source_range_start || start > source_max {
+            continue;
+        }
+
+        if entry.source_range_start > start {
+            slices.insert(entry.source_range_start);
+        }
+
+        if source_max < range_max {
+            slices.insert(source_max);
+        }
+    }
+
+    slices.insert(range_max);
+
+    let mut output = Vec::new();
+    let mut current = start;
+
+    for position in slices {
+        output.push((
+            source
+                .iter()
+                .map(|entry| entry.transform(&current))
+                .find_map(|e| e)
+                .unwrap_or(current),
+            position - current,
+        ));
+
+        current = position;
+    }
+
+    output
 }
 
 fn parse_range(line_iter: &mut Peekable<Lines<'_>>) -> Vec<Range> {
@@ -183,6 +239,7 @@ fn part1(path: &'static str) -> usize {
         .unwrap()
 }
 
+// @see https://github.com/andypymont/advent2023-rust/blob/main/src/bin/05.rs
 fn part2(path: &'static str) -> usize {
     let (
         seeds,
@@ -195,40 +252,34 @@ fn part2(path: &'static str) -> usize {
         humidity_to_location,
     ) = parse_input(path);
 
-    let mut seen: HashMap<usize, usize> = HashMap::new();
-
-    seeds
+    let mut current = seeds
         .chunks_exact(2)
-        .map(|range| {
-            let mut values = vec![];
+        .map(|range| (range[0], range[1]))
+        .collect::<Vec<(usize, usize)>>();
+    let mut future = Vec::new();
 
-            for seed in range[0]..(range[0] + range[1]) {
-                if seen.contains_key(&seed) {
-                    values.push(*seen.get(&seed).unwrap());
-                    continue;
-                }
-                let range = seeds_to_soil.iter();
-                let soil = first_transform(range, &seed).unwrap_or(seed);
-                let fertilizer = first_transform(soil_to_fertilizer.iter(), &soil).unwrap_or(soil);
+    for map in vec![
+        seeds_to_soil,
+        soil_to_fertilizer,
+        fertilizer_to_water,
+        water_to_light,
+        light_to_temp,
+        temp_to_humidity,
+        humidity_to_location,
+    ] {
+        for range in current {
+            future.extend(convert_range(&map, range.0, range.1))
+        }
 
-                let water =
-                    first_transform(fertilizer_to_water.iter(), &fertilizer).unwrap_or(fertilizer);
-                let light = first_transform(water_to_light.iter(), &water).unwrap_or(water);
-                let temp = first_transform(light_to_temp.iter(), &light).unwrap_or(light);
-                let humidity = first_transform(temp_to_humidity.iter(), &temp).unwrap_or(temp);
-                let location =
-                    first_transform(humidity_to_location.iter(), &humidity).unwrap_or(humidity);
+        current = future;
+        future = Vec::new();
+    }
 
-                seen.insert(seed, location);
-
-                values.push(location);
-            }
-            let min_value = values.iter().min().unwrap();
-
-            min_value.to_owned()
-        })
+    current
+        .iter()
+        .map(|range| range.0)
         .min()
-        .unwrap()
+        .expect("Failed to get min")
 }
 
 #[cfg(test)]
@@ -275,7 +326,7 @@ mod tests {
 
     #[test]
     fn aws_two() {
-        let output = part2("./data/adv5_test.2txt");
+        let output = part2("./data/adv5.txt");
 
         println!("{}", output);
     }
