@@ -1,6 +1,6 @@
 use std::process::{Command, Stdio};
 
-use crate::Day;
+use crate::template::Day;
 
 pub fn handle(day: Day, release: bool, time: bool, submit_part: Option<u8>) {
     let mut cmd_args = vec!["run".to_string(), "--bin".to_string(), day.to_string()];
@@ -25,7 +25,7 @@ pub fn handle(day: Day, release: bool, time: bool, submit_part: Option<u8>) {
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
-        .expect("cargo command failed to start");
+        .unwrap();
 
-    cmd.wait().expect("cargo command failed to execute");
+    cmd.wait().unwrap();
 }

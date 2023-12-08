@@ -2,7 +2,7 @@
 /// The approach taken is similar to how `aoc-readme-stars` handles this.
 use std::{fs, io};
 
-use crate::Day;
+use crate::template::Day;
 
 static MARKER: &str = "<!--- benchmarking table --->";
 
@@ -94,9 +94,6 @@ fn update_content(s: &mut String, timings: Vec<Timings>, total_millis: f64) -> R
     Ok(())
 }
 
-/// # Errors
-///
-/// Will return `Error` if README.md does not already exist.
 pub fn update(timings: Vec<Timings>, total_millis: f64) -> Result<(), Error> {
     let path = "README.md";
     let mut readme = String::from_utf8_lossy(&fs::read(path)?).to_string();

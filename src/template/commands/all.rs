@@ -1,10 +1,10 @@
 use std::io;
 
 use crate::template::{
+    all_days,
     readme_benchmarks::{self, Timings},
-    ANSI_BOLD, ANSI_ITALIC, ANSI_RESET,
+    Day, ANSI_BOLD, ANSI_ITALIC, ANSI_RESET,
 };
-use crate::{all_days, Day};
 
 pub fn handle(is_release: bool, is_timed: bool) {
     let mut timings: Vec<Timings> = vec![];
@@ -17,8 +17,7 @@ pub fn handle(is_release: bool, is_timed: bool) {
         println!("{ANSI_BOLD}Day {day}{ANSI_RESET}");
         println!("------");
 
-        let output = child_commands::run_solution(day, is_timed, is_release)
-            .expect("panic during executing day {day}");
+        let output = child_commands::run_solution(day, is_timed, is_release).unwrap();
 
         if output.is_empty() {
             println!("Not solved.");
@@ -66,7 +65,7 @@ pub fn get_path_for_bin(day: Day) -> String {
 /// This module encapsulates interaction with these binaries, both invoking them as well as parsing the timing output.
 mod child_commands {
     use super::{get_path_for_bin, Error};
-    use crate::Day;
+    use crate::template::Day;
     use std::{
         io::{BufRead, BufReader},
         path::Path,

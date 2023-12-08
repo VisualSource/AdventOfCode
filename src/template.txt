@@ -1,0 +1,30 @@
+use itertools::Itertools;
+
+advent::solution!(DAY_NUMBER);
+
+#[must_use]
+pub fn part_one(input: &str) -> Option<usize> {
+    None
+}
+
+#[must_use]
+pub fn part_two(input: &str) -> Option<usize> {
+    None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() {
+        let result = part_one(&advent::template::read_file("examples", DAY));
+        assert_eq!(result, None);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let result = part_two(&advent::template::read_file("examples", DAY));
+        assert_eq!(result, None);
+    }
+}
