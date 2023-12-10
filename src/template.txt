@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-advent::solution!(DAY_NUMBER);
+advent::solution!(%DAY_NUMBER%);
 
 #[must_use]
 pub fn part_one(input: &str) -> Option<usize> {

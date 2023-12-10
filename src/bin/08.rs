@@ -179,8 +179,6 @@ pub fn part_two(input: &str) -> Option<usize> {
         }
     }
 
-    println!("{:#?}", values);
-
     if values.is_empty() {
         None
     } else {

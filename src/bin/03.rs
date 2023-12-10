@@ -93,7 +93,7 @@ fn part_two(input: &str) -> Option<usize> {
                     row += value_size;
                 }
                 '*' => {
-                    /* Save symble locations for later */
+                    /* Save symbols locations for later */
                     gears.insert(Cord { col, row });
                 }
                 _ => { /* Ignore . */ }
@@ -143,7 +143,7 @@ fn part_one(input: &str) -> Option<usize> {
                 }
                 '.' => { /* Ignore . */ }
                 _ => {
-                    /* Save symble locations for later */
+                    /* Save symbols locations for later */
                     cached_symbles.insert(Cord { col, row });
                 }
             }
