@@ -1,23 +1,15 @@
-package main
+package days
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
-	utils "visualsource/advent/utils"
 )
 
-const DAY = 1
-
-var part = flag.String("part", "1", "set part to run")
-
-func main() {
-	file := utils.Load(DAY)
-	defer file.Close()
-
+func Day1(file *os.File, part string) {
 	scanner := bufio.NewScanner(file)
 
 	var leftList []int
@@ -47,10 +39,10 @@ func main() {
 		panic(err)
 	}
 
-	if *part == "1" {
-		part1(leftList, rightList)
+	if part == "1" {
+		day_1_part1(leftList, rightList)
 	} else {
-		part2(leftList, rightList)
+		day_1_part2(leftList, rightList)
 	}
 }
 
@@ -75,7 +67,7 @@ func minValue(list []int) (int, int) {
 	return idx, min
 }
 
-func part1(left []int, right []int) {
+func day_1_part1(left []int, right []int) {
 
 	distence := 0
 
@@ -98,7 +90,7 @@ func part1(left []int, right []int) {
 
 	log.Printf("Part 1: %d\n", distence)
 }
-func part2(left []int, right []int) {
+func day_1_part2(left []int, right []int) {
 	similarity := 0
 
 	seen := map[int]int{}

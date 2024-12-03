@@ -31,3 +31,11 @@ func Load(day int) *os.File {
 
 	return file
 }
+
+func RemoveElement(s []int, i int) []int {
+	if i >= len(s) || i < 0 {
+		panic(fmt.Sprintf("Index is out of range. Index is %d with slice length %d", i, len(s)))
+	}
+
+	return append(s[:i], s[i+1:]...)
+}
