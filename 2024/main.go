@@ -30,6 +30,8 @@ func main() {
 		days.Day2(file, *part)
 	case 3:
 		days.Day3(file, *part)
+	case 4:
+		days.Day4(file, *part)
 
 	default:
 		panic("Invalid day given")
